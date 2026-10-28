@@ -20,7 +20,7 @@ photos and words. Explicit instructions from the user override anything below.
 ## Steps
 
 1. **Check the account and brand.** Call `get_account`. If there is more than one brand and the
-   user did not name one, ask which. Pass it as `brand` on every `remake_ad` call.
+   user did not name one, ask which. Set it as `brand` on every `remake_ad` call.
 2. **Search.** Call `search_library` with the `industry` that matches the product and, when it
    helps, a short `query`: a benefit, a format ("comparison", "review", "listicle") or an
    advertiser. On hosts that support MCP Apps the results show as a grid the user can heart and

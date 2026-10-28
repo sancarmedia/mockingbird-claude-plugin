@@ -21,7 +21,7 @@ description: >
 >   Failed ads and failed sizes spend nothing.
 > - **Talks to one endpoint only:** Mockingbird's hosted MCP server at
 >   `https://www.mockingbirdhouse.com/api/mcp`, under the user's own Mockingbird account, which
->   they sign in to with OAuth when they connect. The plugin holds no keys or passwords.
+>   they sign in to with OAuth when they connect.
 > - **Makes ad images only.** It does not publish ads, touch the user's Meta ad account, or change
 >   budgets or campaigns. It does not run local commands and does not write files. Payments happen
 >   on mockingbirdhouse.com, never inside Claude.
@@ -65,7 +65,7 @@ resolve, qualify it with the server name, as in `mockingbird:remake_ad`.
 
 | The user asks | Call | Credits |
 |---|---|---|
-| "Show me winning ads for my product" / "ad ideas" / "swipe file" | `search_library` (pass `industry`, and a short `query` such as a benefit, a format or an advertiser) | free |
+| "Show me winning ads for my product" / "ad ideas" / "swipe file" | `search_library` (set `industry`, and a short `query` such as a benefit, a format or an advertiser) | free |
 | "Save this one" | `heart_ad` | free |
 | "Remake this ad for my brand" | `remake_ad` with `library_ad_id`, `brand`, `sizes`, optional `notes` | 1 per size |
 | "Make me 5 ads" / "new ads, no source ad" | `make_ads` with `count`, `brand`, `sizes`, optional `notes` | count × sizes |
@@ -82,7 +82,7 @@ Call `search_library` once without filters when you need the list of valid `indu
 
 - **Sizes:** `4:5` portrait (1080x1350) for Facebook and Instagram feeds, Meta's recommended feed
   size and the default; `1:1` square (1080x1080) for feeds and carousels; `9:16` full screen
-  (1080x1920) for Stories and Reels, with text kept inside Meta's safe zone. Pass any one, two or
+  (1080x1920) for Stories and Reels, with text kept inside Meta's safe zone. Set any one, two or
   all three in `sizes`.
 - **Match the placement.** If the user names placements, pick the sizes that fit ("Reels only"
   means `["9:16"]`). If they do not, use the default `["4:5"]` and mention the other sizes once.
@@ -96,7 +96,7 @@ Call `search_library` once without filters when you need the list of valid `indu
 
 ## Pick the brand
 
-An account can hold several brands. If the user named one, pass it as `brand` (a name or
+An account can hold several brands. If the user named one, set it as `brand` (a name or
 `brand_id`) on every `remake_ad` and `make_ads` call. If they did not and `get_account` or
 `list_brands` shows more than one, ask which. Every response says which brand it used; say it back.
 
