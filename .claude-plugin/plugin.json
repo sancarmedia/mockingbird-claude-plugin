@@ -1,0 +1,29 @@
+{
+  "name": "mockingbird",
+  "displayName": "Mockingbird",
+  "version": "1.0.0",
+  "description": "Static Meta ads from proven winners: search a hand-picked library of winning Facebook and Instagram ads, then remake the ones you pick, or make new ones from scratch, in your brand's voice, colours and real product photos, in 4:5, 1:1 and 9:16, through Mockingbird's hosted MCP server.",
+  "author": {
+    "name": "Mockingbird",
+    "email": "hello@mockingbirdhouse.com",
+    "url": "https://www.mockingbirdhouse.com"
+  },
+  "homepage": "https://www.mockingbirdhouse.com/docs/mcp",
+  "repository": "https://github.com/sancarmedia/mockingbird-claude-plugin",
+  "license": "MIT",
+  "privacyPolicyUrl": "https://www.mockingbirdhouse.com/privacy",
+  "termsOfServiceUrl": "https://www.mockingbirdhouse.com/terms",
+  "supportUrl": "https://www.mockingbirdhouse.com/docs/mcp",
+  "keywords": [
+    "mockingbird",
+    "meta-ads",
+    "facebook-ads",
+    "instagram-ads",
+    "ad-creative",
+    "static-ads",
+    "winning-ads",
+    "ad-generator",
+    "ecommerce",
+    "marketing"
+  ]
+}

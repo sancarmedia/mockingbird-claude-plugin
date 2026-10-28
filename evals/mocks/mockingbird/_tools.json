@@ -1,0 +1,358 @@
+{
+  "tools": [
+    {
+      "name": "search_library",
+      "title": "Search the winning-ads library",
+      "description": "Search Mockingbird's hand-curated library of winning Meta ads. Filter by free-text query (matches advertiser and ad copy) and/or industry. Returns library_ad_id values to pass to remake_ad, plus the list of valid industry filters. Hosts that support MCP Apps show the results as a visual grid the user can heart and remake from directly.",
+      "inputSchema": {
+        "type": "object",
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "query": {
+            "description": "Free-text search over advertiser name and ad copy",
+            "type": "string",
+            "maxLength": 120
+          },
+          "industry": {
+            "description": "Exact industry filter, e.g. ecom_health_supplements. Call once without it to see valid values.",
+            "type": "string",
+            "maxLength": 60
+          },
+          "limit": {
+            "description": "Max ads to return (default 8)",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 20
+          }
+        }
+      },
+      "annotations": {
+        "title": "Search the winning-ads library",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "ui": {
+          "resourceUri": "ui://mockingbird/library"
+        },
+        "ui/resourceUri": "ui://mockingbird/library",
+        "openai/outputTemplate": "ui://mockingbird/library",
+        "openai/widgetAccessible": true,
+        "openai/toolInvocation/invoking": "Searching winning ads",
+        "openai/toolInvocation/invoked": "Winning ads ready"
+      }
+    },
+    {
+      "name": "remake_ad",
+      "title": "Remake a winning ad in the user's brand",
+      "description": "Queue a remake of a library ad in one of the user's brands (voice, colours and product photos), in the sizes asked for: 4:5, 1:1 and/or 9:16. Spends 1 credit per size from their Mockingbird plan (same pool as the web app), so all three sizes spend 3. The first size takes under 60 seconds and extra sizes about a minute more; they are made from the first, so they carry the same copy and product. Returns a job_id to poll with get_remake_status. Optional notes steer the remake. If the account has more than one brand, pass brand (name or brand_id from list_brands); otherwise the default brand is used and the response says which.",
+      "inputSchema": {
+        "type": "object",
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "library_ad_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+            "description": "The library_ad_id from search_library"
+          },
+          "notes": {
+            "description": "Optional creative direction, e.g. 'lead with the discount' or 'use a darker background'",
+            "type": "string",
+            "maxLength": 1000
+          },
+          "brand": {
+            "description": "Which of the user's brands to remake into: a brand name or brand_id from list_brands. Always pass it when the account has more than one brand; omitted, the default (oldest) brand is used.",
+            "type": "string",
+            "maxLength": 120
+          },
+          "sizes": {
+            "description": "Which sizes to make: 4:5 (feed), 1:1 (square, feeds and carousels), 9:16 (Stories and Reels). Any one, two or all three. Each size spends 1 credit. Default [\"4:5\"]. Ask the user which placements they run when it isn't clear.",
+            "minItems": 1,
+            "maxItems": 3,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "4:5",
+                "1:1",
+                "9:16"
+              ]
+            }
+          }
+        },
+        "required": [
+          "library_ad_id"
+        ]
+      },
+      "annotations": {
+        "title": "Remake an ad in your brand",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "ui": {
+          "resourceUri": "ui://mockingbird/remake"
+        },
+        "ui/resourceUri": "ui://mockingbird/remake",
+        "openai/outputTemplate": "ui://mockingbird/remake",
+        "openai/widgetAccessible": true,
+        "openai/toolInvocation/invoking": "Starting the remake",
+        "openai/toolInvocation/invoked": "Remake started"
+      }
+    },
+    {
+      "name": "make_ads",
+      "title": "Make new ads from scratch for a brand",
+      "description": "\"Make me ads\": create 1 to 10 brand-new static Meta ads for one of the user's brands, with no source ad. Mockingbird plans that many distinct concepts (different angles, patterns and layouts) from the brand's website, voice profile and real product photos, then renders each in the sizes asked for (4:5 by default, or any of 4:5, 1:1 and 9:16). Each size of each ad spends 1 credit, the same pool as remakes: 3 ads in 2 sizes spend 6. Allow 1 to 3 minutes; the widget updates itself, or poll list_my_remakes / get_remake_status. Use remake_ad instead when the user wants a specific library ad remade. Pass brand when the account has more than one.",
+      "inputSchema": {
+        "type": "object",
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "count": {
+            "description": "How many ads to make (default 4, max 10). Each spends 1 credit per size.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10
+          },
+          "notes": {
+            "description": "Optional facts or direction the concepts should use, e.g. a current offer, the audience, a product to feature, a claim to avoid. Treated as brand data.",
+            "type": "string",
+            "maxLength": 1000
+          },
+          "brand": {
+            "description": "Which brand: a name or brand_id from list_brands. Always pass it when the account has more than one brand.",
+            "type": "string",
+            "maxLength": 120
+          },
+          "sizes": {
+            "description": "Which sizes to make: 4:5 (feed), 1:1 (square, feeds and carousels), 9:16 (Stories and Reels). Any one, two or all three. Each size spends 1 credit. Default [\"4:5\"]. Ask the user which placements they run when it isn't clear.",
+            "minItems": 1,
+            "maxItems": 3,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "4:5",
+                "1:1",
+                "9:16"
+              ]
+            }
+          }
+        }
+      },
+      "annotations": {
+        "title": "Make me ads",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "ui": {
+          "resourceUri": "ui://mockingbird/remake"
+        },
+        "ui/resourceUri": "ui://mockingbird/remake",
+        "openai/outputTemplate": "ui://mockingbird/remake",
+        "openai/widgetAccessible": true,
+        "openai/toolInvocation/invoking": "Planning your ads",
+        "openai/toolInvocation/invoked": "Ads on the way"
+      }
+    },
+    {
+      "name": "get_remake_status",
+      "title": "Check a remake's progress",
+      "description": "Poll a remake job by job_id. While generating it reports the current pipeline step; when finished it returns one image URL per size in finished_ads (4:5, 1:1 and/or 9:16, as asked), ready to download and upload to Meta. A size that failed is listed in sizes_failed and was not charged.",
+      "inputSchema": {
+        "type": "object",
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+            "description": "The job_id from remake_ad"
+          }
+        },
+        "required": [
+          "job_id"
+        ]
+      },
+      "annotations": {
+        "title": "Check a remake's progress",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "ui": {
+          "resourceUri": "ui://mockingbird/remake"
+        },
+        "ui/resourceUri": "ui://mockingbird/remake",
+        "openai/outputTemplate": "ui://mockingbird/remake",
+        "openai/widgetAccessible": true,
+        "openai/toolInvocation/invoking": "Checking the remake",
+        "openai/toolInvocation/invoked": "Remake status"
+      }
+    },
+    {
+      "name": "list_my_remakes",
+      "title": "List recent remakes",
+      "description": "The user's most recent remakes, newest first, with finished ad image URLs where available.",
+      "inputSchema": {
+        "type": "object",
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "limit": {
+            "description": "Max remakes to return (default 5)",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 20
+          }
+        }
+      },
+      "annotations": {
+        "title": "List recent remakes",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "ui": {
+          "resourceUri": "ui://mockingbird/remake"
+        },
+        "ui/resourceUri": "ui://mockingbird/remake",
+        "openai/outputTemplate": "ui://mockingbird/remake",
+        "openai/widgetAccessible": true,
+        "openai/toolInvocation/invoking": "Loading your remakes",
+        "openai/toolInvocation/invoked": "Your remakes"
+      }
+    },
+    {
+      "name": "list_brands",
+      "title": "List the user's brands",
+      "description": "Every brand on the user's Mockingbird account (brand_id, name, website, which is the default). Call this when the user mentions a brand by name, has more than one brand, or before remake_ad so you can pass the right brand.",
+      "inputSchema": {
+        "type": "object",
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {}
+      },
+      "annotations": {
+        "title": "List your brands",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "get_account",
+      "title": "Get plan and remaining ad credits",
+      "description": "The user's Mockingbird plan, ad credits used and remaining this period, and their brands. Check this before remaking if unsure whether credits remain.",
+      "inputSchema": {
+        "type": "object",
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {}
+      },
+      "annotations": {
+        "title": "Get plan and remaining credits",
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "heart_ad",
+      "title": "Heart or unheart a library ad",
+      "description": "Save a library ad to the user's hearts (or remove it), the same list as the heart button in the Mockingbird web app. Hearting does not spend a credit; remake_ad does.",
+      "inputSchema": {
+        "type": "object",
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "library_ad_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+            "description": "The library_ad_id from search_library"
+          },
+          "hearted": {
+            "type": "boolean",
+            "description": "true to heart, false to unheart"
+          }
+        },
+        "required": [
+          "library_ad_id",
+          "hearted"
+        ]
+      },
+      "annotations": {
+        "title": "Heart or unheart an ad",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "upload_ad",
+      "title": "Upload your own ad to remake",
+      "description": "Use when the user wants to remake an ad of their own or a competitor's that is not in the library. Opens an upload widget (on hosts that support MCP Apps) where the user drops the image; it is analysed and filed privately to their account, then they can remake it. Returns a 15-minute upload_url. Tools cannot receive image files directly, so an image pasted into chat must go through this widget.",
+      "inputSchema": {
+        "type": "object",
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {}
+      },
+      "annotations": {
+        "title": "Upload your own ad",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
+      "_meta": {
+        "ui": {
+          "resourceUri": "ui://mockingbird/upload"
+        },
+        "ui/resourceUri": "ui://mockingbird/upload",
+        "openai/outputTemplate": "ui://mockingbird/upload",
+        "openai/widgetAccessible": true,
+        "openai/toolInvocation/invoking": "Preparing the upload",
+        "openai/toolInvocation/invoked": "Ready for your image"
+      }
+    },
+    {
+      "name": "upgrade_plan",
+      "title": "Upgrade the user's plan",
+      "description": "Use when the user is out of ads or wants more. Returns an upgrade_url to hand the user as a link: they open it, confirm, and the card already on their account is charged (no new card entry). Works for moving between plans (e.g. Starter to Pro). Omit to_plan to offer the sensible next step, or set it to jump to a specific higher plan. This tool prepares the upgrade link only; it does NOT charge the card itself.",
+      "inputSchema": {
+        "type": "object",
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "properties": {
+          "to_plan": {
+            "description": "Target plan. Omit to offer the sensible next plan up.",
+            "type": "string",
+            "enum": [
+              "starter",
+              "pro",
+              "elite"
+            ]
+          }
+        }
+      },
+      "annotations": {
+        "title": "Prepare a plan upgrade link",
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
+    }
+  ]
+}

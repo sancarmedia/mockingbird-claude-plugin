@@ -1,0 +1,14 @@
+{
+  "name": "mockingbird",
+  "owner": {
+    "name": "Mockingbird",
+    "email": "hello@mockingbirdhouse.com"
+  },
+  "metadata": {
+    "description": "Mockingbird for Claude: remake winning Meta ads in your brand, or make new ones from scratch",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    { "name": "mockingbird", "source": "./" }
+  ]
+}
