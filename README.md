@@ -43,7 +43,7 @@ In Claude Code, install the plugin from this repository:
 
 In the Claude apps, add Mockingbird from the plugin directory. Then connect the Mockingbird
 connector from the plugin's **Connectors** tab and sign in when Mockingbird prompts you. Sign-in
-is OAuth, so there is no API key to create, paste, or store.
+is OAuth, so there is nothing to copy or paste.
 
 ## What this plugin does, exactly
 
@@ -55,9 +55,9 @@ Disclosed in full so you can judge it before installing:
 - **It runs no local code.** The plugin ships skills, commands, and one remote MCP server
   declaration. It contains no hooks, no scripts, no executables, and no `bin/` directory. It
   does not read or write files on your machine.
-- **It authenticates as you, through OAuth.** The plugin never reads an environment variable,
-  never asks for a key, and never handles a credential itself. Your Mockingbird session is held
-  by the client, and Mockingbird's authorization server issues it.
+- **It signs you in with OAuth.** You sign in to Mockingbird in your browser when you connect.
+  The plugin holds no keys or passwords: the Claude client keeps your session, and Mockingbird's
+  sign-in server issues it.
 - **It makes ad images only.** It does not publish ads, connect to your Meta ad account, or
   change campaigns, budgets or audiences. You download the finished images and upload them to
   Ads Manager yourself.

@@ -11,9 +11,6 @@
   "homepage": "https://www.mockingbirdhouse.com/docs/mcp",
   "repository": "https://github.com/sancarmedia/mockingbird-claude-plugin",
   "license": "MIT",
-  "privacyPolicyUrl": "https://www.mockingbirdhouse.com/privacy",
-  "termsOfServiceUrl": "https://www.mockingbirdhouse.com/terms",
-  "supportUrl": "https://www.mockingbirdhouse.com/docs/mcp",
   "keywords": [
     "mockingbird",
     "meta-ads",

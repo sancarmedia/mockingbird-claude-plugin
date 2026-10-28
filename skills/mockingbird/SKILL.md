@@ -21,7 +21,7 @@ description: >
 >   Failed ads and failed sizes spend nothing.
 > - **Talks to one endpoint only:** Mockingbird's hosted MCP server at
 >   `https://www.mockingbirdhouse.com/api/mcp`, under the user's own Mockingbird account, which
->   they sign in to with OAuth. The plugin never asks for, stores, or reads an API key.
+>   they sign in to with OAuth when they connect. The plugin holds no keys or passwords.
 > - **Makes ad images only.** It does not publish ads, touch the user's Meta ad account, or change
 >   budgets or campaigns. It does not run local commands and does not write files. Payments happen
 >   on mockingbirdhouse.com, never inside Claude.
@@ -45,7 +45,7 @@ tool to call, what it spends, and how to hand the finished ads back.
 
 Call `get_account` first. If the tool does not exist, the connector is not connected. Tell the
 user to open the plugin's **Connectors** tab, connect Mockingbird and sign in when it prompts.
-Sign-in is OAuth, so there is no key to create or paste.
+Sign-in is OAuth, so there is nothing to copy or paste.
 
 Then read the result:
 
