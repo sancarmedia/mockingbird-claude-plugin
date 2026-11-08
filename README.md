@@ -45,6 +45,9 @@ In the Claude apps, add Mockingbird from the plugin directory. Then connect the 
 connector from the plugin's **Connectors** tab and sign in when Mockingbird prompts you. Sign-in
 is OAuth, so there is nothing to copy or paste.
 
+The same repository is also a Cursor plugin (`.cursor-plugin/plugin.json` and `mcp.json`) and a
+Grok Build plugin. Both connect to the same hosted MCP server and sign in the same way.
+
 ## What this plugin does, exactly
 
 Disclosed in full so you can judge it before installing:

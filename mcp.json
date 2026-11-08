@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "mockingbird": {
+      "url": "https://www.mockingbirdhouse.com/api/mcp"
+    }
+  }
+}
